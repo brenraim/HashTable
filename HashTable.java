@@ -1,19 +1,33 @@
+/**
+	This version of HashTable will do a simple put using an object's hashcode. 
+	It does not use separate key and value objects. It rehashes when the load factor exceeds the predetermined limit.
+	Create the appropriate private fields and set a default load factor.
+	@version		09/29/2015
+	@author 		Brendan Raimann
+*/
 public class HashTable
 {
+	/** the maximum percentage of objects in the array before it rehashess */
 	private final double LoadFactor = .6;
+	/** the array that holds the objects */
 	private Object[] table;
-	private int size; //in hindsight, size is unnecessary, but it helped me comprehend the code better.
+	/** the size of the array */
+	private int size; 
 	
 	public HashTable()
 	{
 		table = new Object[100];
 		size = 100;
 	}
-	
+	/** 
+		if the object is null, it does nothing. this makes the method compatible with rehash()
+		if load factor is low enough (calcLoadFactor() < LoadFactor), places obj using its hashcode % size of array.
+		if spot is taken, the obj traverses array until a spot is open (1 spot at a time)
+		@param obj		Object that will be placed into the table
+		@param place	Integer for placement of the object
+		@return 		void
+	*/
 	public void put(Object obj)
-	//if the object is null, it does nothing. this makes the method compatible with rehash()
-	//if load factor is low enough, places obj with its hashcode % size of array.
-	//if spot is taken, the obj traverses array until a spot is open (1 spot at a time)
 	{
 		if (obj != null)
 		{
@@ -36,9 +50,11 @@ public class HashTable
 		}
 
 	}
-	
+	/**
+		prints out each spot of array with 'null' or the memory address
+		@return 	String with every data entry of the table
+	*/
 	public String toString()
-	//prints out each spot of array with 'null' or the memory address
 	{
 		String output = "";
 		for (int i = 0; i < size; i++)
@@ -50,12 +66,15 @@ public class HashTable
 		}
 		return output;
 	}
-	
+	/**
+		creates temporary array of same size, then copies everything over
+		redefines original table as a new array with  the size doubled
+		rehashes data from temp to the newer, bigger array
+		@param temp		An object array used for copying the data to be rahashed
+		@return 		void
+	*/
 	private void rehash()
 	{
-		//creates temporary array of same size, copies everything over,
-		//redefines original table as new one with double the size
-		//rehashes data in temp to the newer, bigger array
 		Object[] temp = new Object[size];
 		for (int i = 0; i < size; i++)
 		{
@@ -68,7 +87,11 @@ public class HashTable
 			put(temp[i]);
 		}
 	}
-	
+	/**
+		divides amount of entries by total size of array
+		@param x		used to count entries into the array
+		@return double 	returns the load factor 
+	*/
 	private double calcLoadFactor()
 	{
 		double x = 0; //count
@@ -80,9 +103,12 @@ public class HashTable
 		return x/(double)size;
 	}
 	
-	public String printLF()
-	{
-		//for testing the code
-		return calcLoadFactor() + "";
-	}
+	/**
+		for testing only, prints load factor
+		@ return String	returns the load factor as String
+	*/
+	//public String printLF()
+	//{
+	//	return calcLoadFactor() + "";
+	//}
 }

@@ -9,6 +9,6 @@ public class HashTableRunner
 			doop.put(str);
 		}
 		System.out.println(doop.toString());
-		System.out.println(doop.printLF());
+		//System.out.println(doop.printLF());
 	}
 }
