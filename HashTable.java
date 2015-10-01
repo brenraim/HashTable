@@ -19,6 +19,12 @@ public class HashTable
 		table = new Object[100];
 		size = 100;
 	}
+	
+	public HashTable(int n)
+	{
+		table = new Object[n];
+		size = n;
+	}
 	/** 
 		if the object is null, it does nothing. this makes the method compatible with rehash()
 		if load factor is low enough (calcLoadFactor() < LoadFactor), places obj using its hashcode % size of array.
