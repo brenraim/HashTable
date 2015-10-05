@@ -5,24 +5,52 @@
 	@version		09/29/2015
 	@author 		Brendan Raimann
 */
-public class HashTable
+public class HashTable<K,V>
 {
+/**
+	@SuppressWarnings("unchecked")
+	public static void main(String[] args)
+	{
+		@SuppressWarnings("rawtypes")
+		HashTable table = new HashTable(5);
+		String str1 = "str1";
+		String str2 = "str2";
+		String str3 = "str3";
+		String str4 = "str4";
+		String str5 = "str5";
+		String str6 = "str6";
+		String str7 = "str7";
+		String str8 = "str8";
+		String str9 = "str9";
+		String str10 = "str10";
+		table.put(str1, str2);
+		table.put(str3, str4);
+		table.put(str5, str6);
+		table.put(str7, str8);
+		table.put(str9, str10);
+		System.out.println(table.containsValue(str2));
+		System.out.println(table);
+		System.out.println(table.get(str1));
+	}
+*/
 	/** the maximum percentage of objects in the array before it rehashess */
 	private final double LoadFactor = .6;
 	/** the array that holds the objects */
-	private Object[] table;
+	private Entry<K, V>[] table;
 	/** the size of the array */
 	private int size; 
 	
+	@SuppressWarnings("unchecked")
 	public HashTable()
 	{
-		table = new Object[100];
+		table = new Entry[100];
 		size = 100;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public HashTable(int n)
 	{
-		table = new Object[n];
+		table = new Entry[n];
 		size = n;
 	}
 	/** 
@@ -33,29 +61,80 @@ public class HashTable
 		@param place	Integer for placement of the object
 		@return 		void
 	*/
-	public void put(Object obj)
+	@SuppressWarnings("unchecked")
+	public void put(K key, V value)
 	{
-		if (obj != null)
+		if (value != null)
 		{
 			if (calcLoadFactor() < LoadFactor)
 			{
-				int place = Math.abs(obj.hashCode() % size);
+				int place = Math.abs(key.hashCode() % size);
 				while (table[place] != null)
 				{
 					place++;
 					if (place >= size)
 						place = 0;
 				}
-				table[place] = obj;
+				table[place] = new Entry<K, V> (key, value);
 				}
 			else
 			{
 				rehash();
-				put(obj);
+				put(key, value);
 			}
 		}
 
 	}
+	
+	public V remove(K key) 
+	{
+		int place = Math.abs(key.hashCode() % size);
+
+		while ((table[place].getKey().equals(key)) == false) 
+		{
+			place++;
+			if (place >= size) 
+				place = 0;
+		}
+		V value = table[place].getValue();
+		table[place] = null;
+		return value;
+	}
+	
+	public V get(K key)
+	{
+		int place = Math.abs(key.hashCode() % size);
+
+		while ((table[place].getKey().equals(key)) == false) 
+		{
+			place++;
+			if (place >= size) 
+				place = 0;
+		}
+		V value = table[place].getValue();
+		return value;
+	}
+	
+	public boolean containsKey(K key)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			if (table[i].getKey().equals(key))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean containsValue(V value)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			if (table[i].getValue.equals(value))
+				return true;
+		}
+		return false;
+	}
+	
 	/**
 		prints out each spot of array with 'null' or the memory address
 		@return 	String with every data entry of the table
@@ -81,16 +160,16 @@ public class HashTable
 	*/
 	private void rehash()
 	{
-		Object[] temp = new Object[size];
+		Entry<K,V>[] temp = new Entry[size];
 		for (int i = 0; i < size; i++)
 		{
 			temp[i] = table[i];
 		}
 		size = size * 2;
-		table = new Object[size];
+		table = new Entry[size];
 		for (int i = 0; i < size/2; i++)
 		{
-			put(temp[i]);
+			put(temp[i].getKey(), temp[i].getValue());
 		}
 	}
 	/**
@@ -117,4 +196,27 @@ public class HashTable
 	//{
 	//	return calcLoadFactor() + "";
 	//}
+	private class Entry<K,V>
+	{
+		private K key;
+		private V value;
+		
+		public Entry (K input1, V input2)
+		{
+			key = input1;
+			value = input2;
+		}
+		
+		public K getKey()
+		{
+			return key;
+		}
+		
+		public V getValue()
+		{
+			return value;
+		}
+		
+		
+	}
 }
